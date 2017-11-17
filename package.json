@@ -1,0 +1,21 @@
+{
+  "name": "stanford_quicksearch",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack -w",
+    "start": "cd server && nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.2",
+    "express": "^4.16.2",
+    "webpack": "^3.8.1"
+  },
+  "devDependencies": {
+    "json-loader": "^0.5.7"
+  }
+}
