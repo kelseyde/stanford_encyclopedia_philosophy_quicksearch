@@ -159,7 +159,7 @@ SearchBox.prototype.initialiseSearch = function() {
       }
       resultsToShow.forEach(function(article) {
         var li = document.createElement("li");
-        li.classList += "result-item";
+        li.classList.add("result-item");
         var a = document.createElement("a");
         a.href = article.url;
         a.innerText = article.title;
@@ -178,22 +178,51 @@ SearchBox.prototype.getSelectedIndex = function() {
   var options = _this.getOptions();
   if (options.length === 0) return;
   var selectedIndex = options.find(function(option, index) {
-    if (option.classList.contains("selected")) return index;
+    return option.id === "selected"
   });
   return selectedIndex;
 }
 
 SearchBox.prototype.handleOptionNavigation = function() {
-  _this.inputElement.addEventListener("keydown", function(event) {
+  _this.inputElement.addEventListener("keyup", function(event) {
     var options = _this.getOptions();
-    if (event.key === "ArrowUp") moveSelectedUp();
-    if (event.key === "ArrowDown") moveSelectedDown();
+    if (event.key === "ArrowUp") _this.moveSelectedUp();
+    if (event.key === "ArrowDown") _this.moveSelectedDown();
   });
 }
 
-SearchBox.prototype.moveSelectedDown = function () {
- var options = _this.getOptions();
-};
+SearchBox.prototype.moveSelectedDown = function() {
+  var options = _this.getOptions();
+  if (options.length === 0) return;
+  var selectedIndex = _this.getSelectedIndex();
+  console.log(selectedIndex);
+  if (selectedIndex === undefined) {
+    options[0].id = "selected"
+    console.log(options[0].id);
+  } else if (selectedIndex === (_this.maxResults - 1)) {
+    options[0].id = "selected"
+    options[options.length - 1].id = "";
+  } else {
+    console.log("we are moving down");
+    options[selectedIndex + 1].id = "selected";
+    options[selectedIndex].id = "";
+  }
+}
+
+SearchBox.prototype.moveSelectedUp = function() {
+  var options = _this.getOptions();
+  if (options.length === 0) return;
+  var selectedIndex = _this.getSelectedIndex();
+    console.log(selectedIndex);
+  if (selectedIndex === undefined) {
+    options[options.length - 1].id = "selected";
+  } else if (selectedIndex === 0) {
+    options[0].id = "";
+  } else {
+    options[selectedIndex - 1].id = "selected";
+    options[selectedIndex].id = "";
+  }
+}
 
 module.exports = SearchBox;
 

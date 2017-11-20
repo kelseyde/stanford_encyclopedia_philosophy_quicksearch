@@ -48,6 +48,6 @@ a {
   color: black;
 }
 
-.selected {
-  background-color: #fcfcfc
+#selected {
+  background-color: dodgerblue;
 }
