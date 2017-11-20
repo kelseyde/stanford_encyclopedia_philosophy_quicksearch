@@ -2,9 +2,9 @@ var autocomplete = function(input, options) {
   var inputFoundAtStart = [];
   var inputFoundInMiddle = [];
   for (var i = 0; i < options.length; i++) {
-    if (input === options[i].title.slice(0, input.length)) {
+    if (options[i].title.toLowerCase().startsWith(input.toLowerCase())) {
       inputFoundAtStart.push(options[i]);
-    } else if (options[i].title.includes(input)) {
+    } else if (options[i].title.toLowerCase().includes(input.toLowerCase())) {
       inputFoundInMiddle.push(options[i]);
     }
   }

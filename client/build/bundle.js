@@ -73,7 +73,7 @@ var SearchBox = __webpack_require__(2);
 window.addEventListener("DOMContentLoaded", function() {
   var inputElement = document.getElementById("search-input");
   var resultsElement = document.getElementById("autocomplete-results");
-  var searchBox = new SearchBox(inputElement, resultsElement, 1, 5);
+  var searchBox = new SearchBox(inputElement, resultsElement, 1, 8);
   searchBox.initialiseSearch();
 })
 
@@ -143,19 +143,24 @@ function SearchBox(inputElement, resultsElement, minChars, maxResults) {
 
 SearchBox.prototype.initialiseSearch = function() {
   _this.inputElement.addEventListener("keyup", function(event) {
+    while (_this.resultsElement.firstChild) {
+      _this.resultsElement.removeChild(_this.resultsElement.firstChild);
+    }
     var inputValue = this.value;
     if (inputValue.length >= _this.minChars) {
       var allResults = autocomplete(inputValue, _this.options);
       var resultsToShow = [];
       while (resultsToShow.length < _this.maxResults) {
-        resultsToShow.push(allResults[0]);
-        allResults.shift();
+        if (allResults.length > 0) {
+          resultsToShow.push(allResults[0]);
+          allResults.shift();
+        } else { break }
       }
       resultsToShow.forEach(function(article) {
         var li = document.createElement("li");
         li.id = "result-item";
-        // li.innerText = article.title;
-        _this.appendChild(li);
+        li.innerText = article.title;
+        _this.resultsElement.appendChild(li);
       });
     }
   });
@@ -172,9 +177,9 @@ var autocomplete = function(input, options) {
   var inputFoundAtStart = [];
   var inputFoundInMiddle = [];
   for (var i = 0; i < options.length; i++) {
-    if (input === options[i].title.slice(0, input.length)) {
+    if (options[i].title.toLowerCase().startsWith(input.toLowerCase())) {
       inputFoundAtStart.push(options[i]);
-    } else if (options[i].title.includes(input)) {
+    } else if (options[i].title.toLowerCase().includes(input.toLowerCase())) {
       inputFoundInMiddle.push(options[i]);
     }
   }

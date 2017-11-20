@@ -14,19 +14,24 @@ function SearchBox(inputElement, resultsElement, minChars, maxResults) {
 
 SearchBox.prototype.initialiseSearch = function() {
   _this.inputElement.addEventListener("keyup", function(event) {
+    while (_this.resultsElement.firstChild) {
+      _this.resultsElement.removeChild(_this.resultsElement.firstChild);
+    }
     var inputValue = this.value;
     if (inputValue.length >= _this.minChars) {
       var allResults = autocomplete(inputValue, _this.options);
       var resultsToShow = [];
       while (resultsToShow.length < _this.maxResults) {
-        resultsToShow.push(allResults[0]);
-        allResults.shift();
+        if (allResults.length > 0) {
+          resultsToShow.push(allResults[0]);
+          allResults.shift();
+        } else { break }
       }
       resultsToShow.forEach(function(article) {
         var li = document.createElement("li");
         li.id = "result-item";
-        // li.innerText = article.title;
-        _this.appendChild(li);
+        li.innerText = article.title;
+        _this.resultsElement.appendChild(li);
       });
     }
   });
