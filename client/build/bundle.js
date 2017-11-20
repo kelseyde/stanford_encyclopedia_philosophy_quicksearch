@@ -160,6 +160,7 @@ SearchBox.prototype.initialiseSearch = function() {
         var li = document.createElement("li");
         li.id = "result-item";
         li.innerText = article.title;
+        li.article = article;
         _this.resultsElement.appendChild(li);
       });
     }
