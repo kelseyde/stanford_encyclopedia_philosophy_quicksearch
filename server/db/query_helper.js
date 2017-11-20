@@ -8,7 +8,6 @@ var queryHelper = {
   all: function (result) {
     MongoClient.connect(this.url, function(err, db) {
       var articleCollection = db.collection("articles");
-
       articleCollection.find().toArray(function (err, docs) {
         result(docs);
       });

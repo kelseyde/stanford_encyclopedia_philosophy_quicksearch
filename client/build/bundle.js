@@ -68,11 +68,13 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 var requestHelper = __webpack_require__(1);
+var SearchBox = __webpack_require__(2);
 
 window.addEventListener("DOMContentLoaded", function() {
-  console.log("hello world");
-
-
+  var inputElement = document.getElementById("search-input");
+  var resultsElement = document.getElementById("autocomplete-results");
+  var searchBox = new SearchBox(inputElement, resultsElement, 1, 5);
+  searchBox.initialiseSearch();
 })
 
 
@@ -86,11 +88,10 @@ var requestHelper = {
     var request = new XMLHttpRequest()
     request.open('GET', url);
     request.addEventListener('load', function() {
-      var jsonString = request.responseText
-      var data = JSON.parse(jsonString)
+      var jsonString = request.responseText;
+      var data = JSON.parse(jsonString);
       callback(data)
     })
-    request.setRequestHeader('Access-Control-Allow-Origin');
     request.send()
   },
 
@@ -120,6 +121,68 @@ var requestHelper = {
 }
 
 module.exports = requestHelper
+
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var autocomplete = __webpack_require__(3);
+var requestHelper = __webpack_require__(1);
+
+function SearchBox(inputElement, resultsElement, minChars, maxResults) {
+  _this = this;
+  this.inputElement = inputElement;
+  this.resultsElement = resultsElement;
+  this.minChars = minChars;
+  this.maxResults = maxResults;
+  requestHelper.get("/articles", function(options) {
+    _this.options = options[0].articles;
+  });
+}
+
+SearchBox.prototype.initialiseSearch = function() {
+  _this.inputElement.addEventListener("keyup", function(event) {
+    var inputValue = this.value;
+    if (inputValue.length >= _this.minChars) {
+      var allResults = autocomplete(inputValue, _this.options);
+      var resultsToShow = [];
+      while (resultsToShow.length < _this.maxResults) {
+        resultsToShow.push(allResults[0]);
+        allResults.shift();
+      }
+      resultsToShow.forEach(function(article) {
+        var li = document.createElement("li");
+        li.id = "result-item";
+        // li.innerText = article.title;
+        _this.appendChild(li);
+      });
+    }
+  });
+}
+
+module.exports = SearchBox;
+
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports) {
+
+var autocomplete = function(input, options) {
+  var inputFoundAtStart = [];
+  var inputFoundInMiddle = [];
+  for (var i = 0; i < options.length; i++) {
+    if (input === options[i].title.slice(0, input.length)) {
+      inputFoundAtStart.push(options[i]);
+    } else if (options[i].title.includes(input)) {
+      inputFoundInMiddle.push(options[i]);
+    }
+  }
+  var results = inputFoundAtStart.concat(inputFoundInMiddle);
+  return results;
+}
+
+module.exports = autocomplete;
 
 
 /***/ })
