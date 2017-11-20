@@ -11,3 +11,5 @@ var autocomplete = function(input, options) {
   var results = inputFoundAtStart.concat(inputFoundInMiddle);
   return results;
 }
+
+module.exports = autocomplete;
