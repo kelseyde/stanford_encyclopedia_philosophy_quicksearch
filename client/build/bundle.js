@@ -75,7 +75,8 @@ window.addEventListener("DOMContentLoaded", function() {
   var resultsElement = document.getElementById("autocomplete-results");
   var searchBox = new SearchBox(inputElement, resultsElement, 1, 8);
   searchBox.initialiseSearch();
-})
+  searchBox.handleOptionNavigation();
+});
 
 
 /***/ }),
@@ -158,14 +159,41 @@ SearchBox.prototype.initialiseSearch = function() {
       }
       resultsToShow.forEach(function(article) {
         var li = document.createElement("li");
-        li.id = "result-item";
-        li.innerText = article.title;
-        li.article = article;
+        li.classList += "result-item";
+        var a = document.createElement("a");
+        a.href = article.url;
+        a.innerText = article.title;
+        li.appendChild(a);
         _this.resultsElement.appendChild(li);
       });
     }
   });
 }
+
+SearchBox.prototype.getOptions = function() {
+  return Array.from(document.getElementsByClassName("result-item"));
+}
+
+SearchBox.prototype.getSelectedIndex = function() {
+  var options = _this.getOptions();
+  if (options.length === 0) return;
+  var selectedIndex = options.find(function(option, index) {
+    if (option.classList.contains("selected")) return index;
+  });
+  return selectedIndex;
+}
+
+SearchBox.prototype.handleOptionNavigation = function() {
+  _this.inputElement.addEventListener("keydown", function(event) {
+    var options = _this.getOptions();
+    if (event.key === "ArrowUp") moveSelectedUp();
+    if (event.key === "ArrowDown") moveSelectedDown();
+  });
+}
+
+SearchBox.prototype.moveSelectedDown = function () {
+ var options = _this.getOptions();
+};
 
 module.exports = SearchBox;
 

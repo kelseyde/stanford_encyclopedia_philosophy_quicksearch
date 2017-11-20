@@ -6,4 +6,5 @@ window.addEventListener("DOMContentLoaded", function() {
   var resultsElement = document.getElementById("autocomplete-results");
   var searchBox = new SearchBox(inputElement, resultsElement, 1, 8);
   searchBox.initialiseSearch();
-})
+  searchBox.handleOptionNavigation();
+});
