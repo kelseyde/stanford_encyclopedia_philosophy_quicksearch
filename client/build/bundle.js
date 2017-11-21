@@ -170,19 +170,6 @@ SearchBox.prototype.initialiseSearch = function() {
   });
 }
 
-SearchBox.prototype.getOptions = function() {
-  return Array.from(document.getElementsByClassName("result-item"));
-}
-
-SearchBox.prototype.getSelectedIndex = function() {
-  var options = _this.getOptions();
-  if (options.length === 0) return;
-  var selectedIndex = options.find(function(option, index) {
-    return option.id === "selected"
-  });
-  return selectedIndex;
-}
-
 SearchBox.prototype.handleOptionNavigation = function() {
   _this.inputElement.addEventListener("keyup", function(event) {
     var options = _this.getOptions();
@@ -191,21 +178,36 @@ SearchBox.prototype.handleOptionNavigation = function() {
   });
 }
 
+SearchBox.prototype.getOptions = function() {
+  return Array.from(document.getElementsByClassName("result-item"));
+}
+
+SearchBox.prototype.getSelectedIndex = function() {
+  var options = _this.getOptions();
+  if (options.length === 0) return;
+
+  console.log(options[2]);
+
+  console.log("ID: ", options[2].id);
+
+  var selected = document.getElementById("selected");
+  console.log(selected);
+  
+  return 1;
+}
+
 SearchBox.prototype.moveSelectedDown = function() {
   var options = _this.getOptions();
   if (options.length === 0) return;
   var selectedIndex = _this.getSelectedIndex();
-  console.log(selectedIndex);
-  if (selectedIndex === undefined) {
-    options[0].id = "selected"
-    console.log(options[0].id);
+  if (selectedIndex === -1) {
+    options[0].id = "selected";
   } else if (selectedIndex === (_this.maxResults - 1)) {
-    options[0].id = "selected"
-    options[options.length - 1].id = "";
+    options[0].id = "selected";
+    options[options.length - 1].removeAttribute("id");
   } else {
-    console.log("we are moving down");
     options[selectedIndex + 1].id = "selected";
-    options[selectedIndex].id = "";
+    options[selectedIndex].removeAttribute("id");
   }
 }
 
@@ -214,13 +216,13 @@ SearchBox.prototype.moveSelectedUp = function() {
   if (options.length === 0) return;
   var selectedIndex = _this.getSelectedIndex();
     console.log(selectedIndex);
-  if (selectedIndex === undefined) {
+  if (selectedIndex === -1) {
     options[options.length - 1].id = "selected";
   } else if (selectedIndex === 0) {
-    options[0].id = "";
+    options[0].removeAttribute("id");
   } else {
     options[selectedIndex - 1].id = "selected";
-    options[selectedIndex].id = "";
+    options[selectedIndex].removeAttribute("id");
   }
 }
 
