@@ -3,7 +3,7 @@ var ObjectID = require("mongodb").ObjectID;
 
 var queryHelper = {
 
-  url: "mongodb://heroku_pswfks8w:lpgo3fq6ish2pjcl73genbivd0@ds117156.mlab.com:17156/heroku_pswfks8w",
+  url: process.env.MONGOLAB_URI,
 
   all: function (result) {
     MongoClient.connect(this.url, function(err, db) {
