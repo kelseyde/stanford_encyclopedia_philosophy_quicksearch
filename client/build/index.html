@@ -8,12 +8,19 @@
     <script src='bundle.js'></script>
   </head>
   <body>
-    <img id="logo" src="SEPlogo.png">
-    <h1>Stanford Encyclopedia of Philosophy <span id="quicksearch">Quicksearch</span></h1>
+    <div id="wrapper">
+      <div id="header">
+        <img id="logo" src="SEPlogo.png">
+        <h1 id="title">Stanford Encyclopedia of Philosophy <br><span id="quicksearch">Quicksearch</span></h1>
+      </div>
+      <div id="search-container">
+        <input id="search-input" type="text" placeholder="Search SEP"></input>
+        <ul id="autocomplete-results"></ul>
+      </div>
+    </div>
 
-    <div id="search-container">
-      <input id="search-input" type="text" placeholder="Search SEP"></input>
-      <ul id="autocomplete-results"></ul>
+    <div id="article-list">
+
     </div>
 
 

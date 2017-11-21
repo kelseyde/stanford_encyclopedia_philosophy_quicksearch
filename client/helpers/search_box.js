@@ -32,6 +32,7 @@ SearchBox.prototype.initialiseSearch = function() {
         var li = document.createElement("li");
         li.classList.add("result-item");
         var a = document.createElement("a");
+        a.id = "autocomplete-link"
         a.href = article.url;
         a.innerText = article.title;
         li.appendChild(a);

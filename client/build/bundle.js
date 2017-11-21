@@ -67,8 +67,9 @@
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var requestHelper = __webpack_require__(1);
-var SearchBox = __webpack_require__(2);
+var requestHelper       = __webpack_require__(1);
+var SearchBox           = __webpack_require__(2);
+var populateArticleList = __webpack_require__(4);
 
 window.addEventListener("DOMContentLoaded", function() {
   var inputElement = document.getElementById("search-input");
@@ -76,6 +77,7 @@ window.addEventListener("DOMContentLoaded", function() {
   var searchBox = new SearchBox(inputElement, resultsElement, 1, 8);
   searchBox.initialiseSearch();
   searchBox.handleOptionNavigation();
+  populateArticleList();
 });
 
 
@@ -162,6 +164,7 @@ SearchBox.prototype.initialiseSearch = function() {
         var li = document.createElement("li");
         li.classList.add("result-item");
         var a = document.createElement("a");
+        a.id = "autocomplete-link"
         a.href = article.url;
         a.innerText = article.title;
         li.appendChild(a);
@@ -263,6 +266,120 @@ var autocomplete = function(input, options) {
 }
 
 module.exports = autocomplete;
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var requestHelper = __webpack_require__(1);
+var shuffle = __webpack_require__(5)
+
+var populateArticleList = function() {
+  var container = document.getElementById("article-list");
+  requestHelper.get("/articles", function(result) {
+    var articles = shuffle(result[0].articles);
+    console.log(articles);
+    articles.forEach(function(article) {
+      var link = document.createElement("a");
+      link.id = "article-list-item";
+      link.innerText = article.title.toLowerCase();
+      link.href = article.url;
+      container.appendChild(link);
+    });
+  });
+}
+
+module.exports = populateArticleList;
+
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/**
+ * Randomize the order of the elements in a given array.
+ * @param {Array} arr - The given array.
+ * @param {Object} [options] - Optional configuration options.
+ * @param {Boolean} [options.copy] - Sets if should return a shuffled copy of the given array. By default it's a falsy value.
+ * @param {Function} [options.rng] - Specifies a custom random number generator.
+ * @returns {Array}
+ */
+function shuffle(arr, options) {
+
+  if (!Array.isArray(arr)) {
+    throw new Error('shuffle expect an array as parameter.');
+  }
+
+  options = options || {};
+
+  var collection = arr,
+      len = arr.length,
+      rng = options.rng || Math.random,
+      random,
+      temp;
+
+  if (options.copy === true) {
+    collection = arr.slice();
+  }
+
+  while (len) {
+    random = Math.floor(rng() * len);
+    len -= 1;
+    temp = collection[len];
+    collection[len] = collection[random];
+    collection[random] = temp;
+  }
+
+  return collection;
+};
+
+/**
+ * Pick one or more random elements from the given array.
+ * @param {Array} arr - The given array.
+ * @param {Object} [options] - Optional configuration options.
+ * @param {Number} [options.picks] - Specifies how many random elements you want to pick. By default it picks 1.
+ * @param {Function} [options.rng] - Specifies a custom random number generator.
+ * @returns {Object}
+ */
+shuffle.pick = function(arr, options) {
+
+  if (!Array.isArray(arr)) {
+    throw new Error('shuffle.pick() expect an array as parameter.');
+  }
+
+  options = options || {};
+
+  var rng = options.rng || Math.random,
+      picks = options.picks || 1;
+
+  if (typeof picks === 'number' && picks !== 1) {
+    var len = arr.length,
+        collection = arr.slice(),
+        random = [],
+        index;
+
+    while (picks && len) {
+      index = Math.floor(rng() * len);
+      random.push(collection[index]);
+      collection.splice(index, 1);
+      len -= 1;
+      picks -= 1;
+    }
+
+    return random;
+  }
+
+  return arr[Math.floor(rng() * arr.length)];
+};
+
+/**
+ * Expose
+ */
+module.exports = shuffle;
 
 
 /***/ })
