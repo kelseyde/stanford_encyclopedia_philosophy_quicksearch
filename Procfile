@@ -1,1 +1,1 @@
-web: cd client && node app.js
+web: cd client && open index.html
