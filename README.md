@@ -3,3 +3,4 @@ An app for quick-searching entries in the Stanford Encyclopedia of Philosophy. F
 
 available here: https://stanford-quicksearch.herokuapp.com/
 
+![homescreen](stanford_homescreen.png)
