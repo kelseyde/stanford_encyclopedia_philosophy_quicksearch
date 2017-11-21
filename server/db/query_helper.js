@@ -3,7 +3,7 @@ var ObjectID = require("mongodb").ObjectID;
 
 var queryHelper = {
 
-  url: process.env.MONGOLAB_URI || "mongodb://localhost:27017/articles",
+  url: "mongodb://localhost:27017/articles",
 
   all: function (result) {
     MongoClient.connect(this.url, function(err, db) {

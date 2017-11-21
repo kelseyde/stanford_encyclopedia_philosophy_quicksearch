@@ -10,8 +10,8 @@ var server = app.listen(process.env.PORT || 3000, function () {
   console.log('Example app listening at http://%s:%s', host, port);
 });
 
-app.get("/articles", function(req, res) {
-  queryHelper.all(function(docs) {
-    res.json(docs);
-  })
+// app.get("/articles", function(req, res) {
+//   queryHelper.all(function(docs) {
+//     res.json(docs);
+//   })
 });

@@ -12,16 +12,6 @@ var populateArticleList = function() {
     link.href = article.url;
     container.appendChild(link);
   });
-  // requestHelper.get("/articles", function(result) {
-  //   var articles = shuffle(result[0].articles);
-  //   articles.forEach(function(article) {
-  //     var link = document.createElement("a");
-  //     link.id = "article-list-item";
-  //     link.innerText = article.title.toLowerCase();
-  //     link.href = article.url;
-  //     container.appendChild(link);
-  //   });
-  // });
 }
 
 module.exports = populateArticleList;
