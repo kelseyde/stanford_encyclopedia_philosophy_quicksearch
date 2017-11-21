@@ -137,6 +137,7 @@ function SearchBox(inputElement, resultsElement, minChars, maxResults) {
   this.resultsElement = resultsElement;
   this.minChars = minChars;
   this.maxResults = maxResults;
+  this.selectedIndex = null;
   requestHelper.get("/articles", function(options) {
     _this.options = options[0].articles;
   });
@@ -182,47 +183,48 @@ SearchBox.prototype.getOptions = function() {
   return Array.from(document.getElementsByClassName("result-item"));
 }
 
-SearchBox.prototype.getSelectedIndex = function() {
-  var options = _this.getOptions();
-  if (options.length === 0) return;
-
-  console.log(options[2]);
-
-  console.log("ID: ", options[2].id);
-
-  var selected = document.getElementById("selected");
-  console.log(selected);
-  
-  return 1;
-}
-
 SearchBox.prototype.moveSelectedDown = function() {
+  console.log(_this.selectedIndex === null);
   var options = _this.getOptions();
   if (options.length === 0) return;
-  var selectedIndex = _this.getSelectedIndex();
-  if (selectedIndex === -1) {
+  if (_this.selectedIndex > options.length - 1) {
+    _this.selectedIndex = null;
+  }
+  if (_this.selectedIndex === null) {
     options[0].id = "selected";
-  } else if (selectedIndex === (_this.maxResults - 1)) {
+    _this.selectedIndex = 0;
+    console.log(_this.selectedIndex);
+  } else if (_this.selectedIndex === (options.length - 1)) {
     options[0].id = "selected";
     options[options.length - 1].removeAttribute("id");
+    _this.selectedIndex = 0;
   } else {
-    options[selectedIndex + 1].id = "selected";
-    options[selectedIndex].removeAttribute("id");
+    if (options.length > 1) {
+      console.log("triggering if");
+      options[_this.selectedIndex + 1].id = "selected";
+      options[_this.selectedIndex].removeAttribute("id");
+      _this.selectedIndex += 1;
+    }
   }
 }
 
 SearchBox.prototype.moveSelectedUp = function() {
   var options = _this.getOptions();
   if (options.length === 0) return;
-  var selectedIndex = _this.getSelectedIndex();
-    console.log(selectedIndex);
-  if (selectedIndex === -1) {
+  if (_this.selectedIndex > options.length - 1) {
+    _this.selectedIndex = null;
+  }
+  if (_this.selectedIndex === null) {
     options[options.length - 1].id = "selected";
-  } else if (selectedIndex === 0) {
+    _this.selectedIndex = (options.length - 1);
+  } else if (_this.selectedIndex === 0) {
     options[0].removeAttribute("id");
+    options[options.length - 1].id = "selected";
+    _this.selectedIndex = (options.length - 1);
   } else {
-    options[selectedIndex - 1].id = "selected";
-    options[selectedIndex].removeAttribute("id");
+    options[_this.selectedIndex - 1].id = "selected";
+    options[_this.selectedIndex].removeAttribute("id");
+    _this.selectedIndex -= 1;
   }
 }
 
