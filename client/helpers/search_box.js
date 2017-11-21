@@ -1,5 +1,6 @@
 var autocomplete = require("./autocomplete");
 var requestHelper = require("./request_helper");
+var data = require("../../server/db/articles.js");
 
 function SearchBox(inputElement, resultsElement, minChars, maxResults) {
   _this = this;
@@ -8,9 +9,10 @@ function SearchBox(inputElement, resultsElement, minChars, maxResults) {
   this.minChars = minChars;
   this.maxResults = maxResults;
   this.selectedIndex = null;
-  requestHelper.get("/articles", function(options) {
-    _this.options = options[0].articles;
-  });
+  // requestHelper.get("/articles", function(options) {
+  //   _this.options = options[0].articles;
+  // });
+  this.options = data[0].articles;
 }
 
 SearchBox.prototype.initialiseSearch = function() {
@@ -105,7 +107,6 @@ SearchBox.prototype.visitLink = function() {
   var options = _this.getOptions();
   var selected = options[_this.selectedIndex];
   var link = selected.firstChild;
-  console.log(link);
   (function(element) {
     var event = new MouseEvent('click');
     var canceled = !element.dispatchEvent(event);
